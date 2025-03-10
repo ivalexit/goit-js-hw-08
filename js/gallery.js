@@ -94,6 +94,20 @@ const images = [
   
     const largeImageURL = targetImage.dataset.source;
     console.log("Link to the large size image:", largeImageURL);
+
+    const modalImage = basicLightbox.create(`
+    <img src="${largeImageURL}" width="1112" height="640">
+  `);
+
+  modalImage.show();
+
+  const closeOnEscape = (event) => {
+    if (event.key === "Escape") {
+      modalImage.close();
+      document.removeEventListener("keydown", closeOnEscape);
+    }
+  };
+  document.addEventListener("keydown", closeOnEscape);
   
 
   });
