@@ -67,3 +67,33 @@ const images = [
 
 
 
+  const gallery = document.querySelector(".gallery");
+
+  gallery.innerHTML = images
+    .map(
+      ({ preview, original, description }) => `
+        <li class="gallery-item">
+          <a class="gallery-link" href="${original}">
+            <img
+              class="gallery-image"
+              src="${preview}"
+              data-source="${original}"
+              alt="${description}"
+            />
+          </a>
+        </li>
+      `
+    )
+    .join("");
+  
+  gallery.addEventListener("click", (event) => {
+    event.preventDefault();
+  
+    const targetImage = event.target;
+    if (targetImage.nodeName !== "IMG") return;
+  
+    const largeImageURL = targetImage.dataset.source;
+    console.log("Link to the large size image:", largeImageURL);
+  
+
+  });
