@@ -66,48 +66,56 @@ const images = [
 
 
 
-
+  
   const gallery = document.querySelector(".gallery");
 
-  gallery.innerHTML = images
-    .map(
-      ({ preview, original, description }) => `
-        <li class="gallery-item">
-          <a class="gallery-link" href="${original}">
-            <img
-              class="gallery-image"
-              src="${preview}"
-              data-source="${original}"
-              alt="${description}"
-            />
-          </a>
-        </li>
-      `
-    )
-    .join("");
+ 
+  const createGalleryMarkup = (images) =>
+    images
+      .map(
+        ({ preview, original, description }) => `
+          <li class="gallery-item">
+            <a class="gallery-link" href="${original}">
+              <img
+                class="gallery-image"
+                src="${preview}"
+                data-source="${original}"
+                alt="${description}"
+              />
+            </a>
+          </li>
+        `
+      )
+      .join("");
   
-  gallery.addEventListener("click", (event) => {
+
+  gallery.innerHTML = createGalleryMarkup(images);
+  
+
+  const openModal = (event) => {
     event.preventDefault();
   
-    const targetImage = event.target;
-    if (targetImage.nodeName !== "IMG") return;
+    const targetImage = event.target.closest(".gallery-image");
+    if (!targetImage) return;
   
     const largeImageURL = targetImage.dataset.source;
-    console.log("Link to the large size image:", largeImageURL);
-
-    const modalImage = basicLightbox.create(`
-    <img src="${largeImageURL}" width="1112" height="640">
-  `);
-
-  modalImage.show();
-
-  const closeOnEscape = (event) => {
-    if (event.key === "Escape") {
-      modalImage.close();
-      document.removeEventListener("keydown", closeOnEscape);
-    }
-  };
-  document.addEventListener("keydown", closeOnEscape);
   
-
-  });
+    const modalInstance = basicLightbox.create(`
+      <img src="${largeImageURL}" width="1112" height="640">
+    `);
+  
+    modalInstance.show();
+  
+   
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") {
+        modalInstance.close();
+        document.removeEventListener("keydown", closeOnEscape);
+      }
+    };
+    
+    document.addEventListener("keydown", closeOnEscape);
+  };
+  
+  
+  gallery.addEventListener("click", openModal);
